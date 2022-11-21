@@ -1,0 +1,90 @@
+@mixin font($font_name, $file_name, $weight, $style) {
+  @font-face {
+    src:
+      url("../fonts/#{$file_name}.woff") format("woff"),
+      url("../fonts/#{$file_name}.woff2") format("woff2");
+
+    font-family: $font_name;
+    font-weight: #{$weight};
+    font-style: #{$style};
+    font-display: swap;
+  }
+}
+
+@mixin hamburger($dimensions) {
+  position: relative;
+
+  display: block;
+
+  width: $dimensions;
+  height: $dimensions;
+
+  cursor: pointer;
+
+  border: none;
+  background: none;
+
+  span {
+    position: absolute;
+    left: calc(50% - 8px);
+
+    display: block;
+
+    width: 16px;
+    height: 1px;
+
+    transition-timing-function: $easing;
+    transition-duration: $speed;
+    transition-property: background-color, opacity, transform;
+    transform-origin: center;
+
+    background-color: currentcolor;
+
+    &:nth-child(1) {
+      top: calc(50% - 6px);
+    }
+
+    &:nth-child(2) {
+      top: calc(50% - 1px);
+    }
+
+    &:nth-child(3) {
+      top: calc(50% + 4px);
+    }
+  }
+
+  &:hover {
+    background-color: rgba(#000, 0.05);
+  }
+
+  // Modifers
+  &.is-active {
+    span {
+      &:nth-child(1) {
+        transform: translateY(5px) rotate(45deg);
+      }
+
+      &:nth-child(2) {
+        opacity: 0;
+      }
+
+      &:nth-child(3) {
+        transform: translateY(-5px) rotate(-45deg);
+      }
+    }
+  }
+}
+
+// Responsiveness
+
+@mixin from($device) {
+  @media screen and (min-width: $device) {
+    @content;
+  }
+}
+
+@mixin until($device) {
+  @media screen and (max-width: $device - 1px) {
+    @content;
+  }
+}
