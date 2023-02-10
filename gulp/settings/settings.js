@@ -7,7 +7,7 @@ export const path = {
         js: './build/js/'
     },
     src: {
-        html: './src/*.html',
+        html: './src/*.pug',
         img: './src/i/**/*.{jpg,jpeg,png,gif}',
         scss: './src/scss/style.scss',
         components: './src/components/**/*.js',

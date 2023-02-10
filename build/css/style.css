@@ -1,0 +1,129 @@
+/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
+html,
+body,
+p,
+ol,
+ul,
+li,
+dl,
+dt,
+dd,
+blockquote,
+figure,
+fieldset,
+legend,
+textarea,
+pre,
+iframe,
+hr,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+ul {
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+img,
+video {
+  height: auto;
+  max-width: 100%;
+}
+
+iframe {
+  border: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
+td:not([align]),
+th:not([align]) {
+  text-align: inherit;
+}
+
+.burger {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.burger span {
+  position: absolute;
+  left: calc(50% - 8px);
+  display: block;
+  width: 16px;
+  height: 1px;
+  transition-timing-function: ease-out;
+  transition-duration: 86ms;
+  transition-property: background-color, opacity, transform;
+  transform-origin: center;
+  background-color: currentcolor;
+}
+.burger span:nth-child(1) {
+  top: calc(50% - 6px);
+}
+.burger span:nth-child(2) {
+  top: calc(50% - 1px);
+}
+.burger span:nth-child(3) {
+  top: calc(50% + 4px);
+}
+.burger:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.burger.is-active span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+.burger.is-active span:nth-child(2) {
+  opacity: 0;
+}
+.burger.is-active span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+.header {
+  position: relative;
+  color: aqua;
+  font-size: 12px;
+}

@@ -1,4 +1,4 @@
-import fileinclude from 'gulp-file-include'
+import pug from 'gulp-pug'
 export const html = () => {
     return app.gulp.src(app.path.src.html)
         .pipe(app.plugins.plumber(
@@ -7,10 +7,7 @@ export const html = () => {
                 message: "Error <%= error.message %>"
             })
         ))
-        .pipe(fileinclude({
-            prefix: '%',
-            basepath: '@file'
-        }))
+        .pipe(pug())
         .pipe(app.gulp.dest(app.path.build.html))
         .pipe(app.plugins.browsersync.stream())
 }
