@@ -3,17 +3,17 @@ export const path = {
     build: {
         html: './build/',
         css: './build/css/',
-        img: './build/i/',
+        img: './build/img/',
         js: './build/js/'
     },
     src: {
         html: './src/*.pug',
-        img: './src/i/**/*.{jpg,jpeg,png,gif}',
+        img: './src/img/**/*.{jpg,jpeg,png,gif}',
         scss: './src/scss/style.scss',
         components: './src/components/**/*.js',
         js: './src/js/app.js',
         jsFolder: './src/js/',
-        svgicons: './src/i/icons/*.svg'
+        svgicons: './src/img/icons/*.svg'
     },
     clean: './app'
 }

@@ -23,7 +23,7 @@ global.app = {
 const js = gulp.series(script, build)
 
 const watcher = () => {
-    gulp.watch('./src/**/*.html', html)
+    gulp.watch('./src/**/*.pug', html)
     gulp.watch('./src/**/*.scss', scss)
     gulp.watch('./src/components/**/*.js', script)
     gulp.watch('./src/js/*.js', build)
@@ -32,6 +32,7 @@ const watcher = () => {
 const main = gulp.parallel(html, scss, js)
 const buildApp = gulp.series(reset, main, css, img)
 const dev = gulp.series(reset, html, scss, js, gulp.parallel(watcher, serve))
+
 
 gulp.task('image', img)
 gulp.task('svg', svg)
