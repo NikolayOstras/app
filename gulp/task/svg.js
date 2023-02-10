@@ -2,14 +2,14 @@ import svgSprite from "gulp-svg-sprite";
 const config = {
 	mode: {
 		symbol: {
-			sprite: '../common/icons.svg',
+			sprite: 'icons.svg',
 			//example: true
 		}
 	},
 	svg: {
 		rootAttributes: {
-			style: 'display: none;',
-			'aria-hidden': true
+			// style: 'display: none;',
+			// 'aria-hidden': true
 		},
 		xmlDeclaration: false
 	},
@@ -30,6 +30,6 @@ export const svg = () => {
 			}))
 		)
 		.pipe(svgSprite(config))
-		.pipe(app.plugins.rename({ extname: ".html" }))
-		.pipe(app.gulp.dest('./src/'))
+		// .pipe(app.plugins.rename({ extname: ".html" }))
+		.pipe(app.gulp.dest('./build/'))
 }
