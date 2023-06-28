@@ -6,8 +6,13 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title Enter title
     link(rel="stylesheet" href="css/style.css")
-    object(type='image/svg+xml' data='./symbol/icons.svg' style="display:none;")
-  body(style="background: #111111;")
+    meta(property='og:description' content='description')
+    meta(property='og:title' content='Enter title')
+    //- meta(property='og:image' content='/img/logo.png')
+    meta(property='og:url' content='https://feedmelang.com/')
+    meta(property='og:type' content='website')
+    meta(name='theme-color' content='#ffffff')
+  body(style="background: #ffffff;")
     include ../common/common.pug
     block content 
     block scripts
