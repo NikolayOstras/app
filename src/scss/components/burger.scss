@@ -1,8 +1,10 @@
 .menu-btn {
 	display: none;
-	@mixin max($md) {
+	@include max($md) {
 		display: flex;
 	}
+	position: relative;
+	z-index: $z-1;
 	--height: 24px;
 	width: 36px;
 	padding: 4px;
@@ -24,9 +26,11 @@
 		}
 	}
 	&:hover {
-		& span {
-			&:nth-child(2) {
-				width: 100%;
+		@include hover {
+			& span {
+				&:nth-child(2) {
+					width: 100%;
+				}
 			}
 		}
 	}

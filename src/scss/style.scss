@@ -1,11 +1,16 @@
-// @import './base/reset';
-@import './base/tailwind';
-@import './base/layout';
+// @import './core/reset';
+@import './core/tailwind';
+@import './core/fonts';
+@import './core/vars';
+@import './core/layout';
 @import './settings/*.*';
 @import './mixins/mixins';
 /* import common blocks
 =======================
 */
+@import './components/burger';
+@import './components/header';
+
 /* import page blocks
 =======================
 */

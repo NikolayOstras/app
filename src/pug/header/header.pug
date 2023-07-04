@@ -1,1 +1,18 @@
-header.header.$header
+- 
+	const menuItems = [
+		{ name: 'Product', link: '/' },
+		{ name: 'Commitments', link: '/' },
+		{ name: 'Help', link: '/' }
+	]
+
+header.header.__header
+	a.logo(href='/') Logo
+	nav(role='navigation').nav
+		ul.menu.__menu(role='menu')
+			each item in menuItems
+				li(role='menuitem')
+					a(href=item.link)= item.name
+	button.menu-btn.__burger(aria-label="open menu")
+		span
+		span
+		span

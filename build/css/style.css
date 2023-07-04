@@ -469,12 +469,17 @@ video {
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+.container {
+  width: 100%;
+}
 .block {
   display: block;
 }
 .resize {
   resize: both;
 }
+/* media sizes */
+/* z-index */
 body {
   display: flex;
   flex-direction: column;
@@ -485,11 +490,101 @@ main {
   flex-grow: 1;
 }
 
-/* media sizes */
-/* z-index */
+.container {
+  max-width: 1280px;
+  padding: 0 16px;
+  margin: 0 auto;
+}
+
 /* import common blocks
 =======================
 */
+.menu-btn {
+  display: none;
+  z-index: 1;
+  --height: 24px;
+  width: 36px;
+  padding: 4px;
+  height: var(--height);
+  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
+}
+@media (max-width: 768px) {
+  .menu-btn {
+    display: flex;
+  }
+}
+.menu-btn span {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: black;
+  transition: width 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.menu-btn span:nth-child(2) {
+  margin-left: auto;
+  width: 50%;
+}
+@supports (-moz-touch-enabled: 0) or (-ms-touch-enabled: 0) or (-webkit-touch-enabled: 0) or (touch-action: none) {
+  .menu-btn:hover span:nth-child(2) {
+    width: 100%;
+  }
+}
+.menu-btn:active {
+  border: 1px solid black;
+}
+.menu-btn.is-active span:first-child {
+  transform: rotate(135deg);
+  position: relative;
+  top: calc(var(--height) * 0.35);
+}
+.menu-btn.is-active span:nth-child(2) {
+  width: 0;
+}
+.menu-btn.is-active span:last-child {
+  transform: rotate(45deg);
+  position: relative;
+  bottom: calc(var(--height) * 0.25);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+@media (max-width: 768px) {
+  .menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: var(--doc-height);
+    background-color: #eee;
+    overflow: auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity cubic-bezier(0.92, 0.02, 0.96, 0.42) 0.3s;
+  }
+  .menu.is-active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
 /* import page blocks
 =======================
 */
