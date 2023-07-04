@@ -1,0 +1,12 @@
+@mixin max($max-width) {
+	@media (max-width: $max-width) {
+		@content;
+	}
+}
+
+@mixin hover {
+	@supports (-moz-touch-enabled: 0) or (-ms-touch-enabled: 0) or
+		(-webkit-touch-enabled: 0) or (touch-action: none) {
+		@content;
+	}
+}
