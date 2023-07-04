@@ -1,0 +1,53 @@
+.menu-btn {
+	display: none;
+	@mixin max($md) {
+		display: flex;
+	}
+	--height: 24px;
+	width: 36px;
+	padding: 4px;
+	height: var(--height);
+	position: relative;
+	flex-direction: column;
+	justify-content: space-between;
+	& span {
+		display: block;
+		height: 1px;
+		width: 100%;
+		background-color: black;
+		transition: width 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+		transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+		&:nth-child(2) {
+			margin-left: auto;
+			width: 50%;
+		}
+	}
+	&:hover {
+		& span {
+			&:nth-child(2) {
+				width: 100%;
+			}
+		}
+	}
+	&:active {
+		border: 1px solid black;
+	}
+	&.is-active {
+		& span {
+			&:first-child {
+				transform: rotate(135deg);
+				position: relative;
+				top: calc(var(--height) * 0.35);
+			}
+			&:nth-child(2) {
+				width: 0;
+			}
+			&:last-child {
+				transform: rotate(45deg);
+				position: relative;
+				bottom: calc(var(--height) * 0.25);
+			}
+		}
+	}
+}
