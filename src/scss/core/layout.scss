@@ -1,13 +1,13 @@
 body {
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
+	min-height: 200vh;
 }
 main {
 	flex-grow: 1;
 }
 .container {
 	max-width: $container;
-	padding: 0 16px;
+	padding: 0 $container-padding;
 	margin: 0 auto;
 }

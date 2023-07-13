@@ -2,6 +2,9 @@ header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	background-color: rgba(#ffffff, 0.25);
+	backdrop-filter: blur(20px);
+	color: #eeeeee;
 }
 .menu {
 	display: flex;
@@ -29,5 +32,24 @@ header {
 			opacity: 1;
 			pointer-events: all;
 		}
+	}
+}
+.header.fixed {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+	animation-name: showHeader;
+	animation-duration: 0.3s;
+	animation-timing-function: ease-in-out;
+	animation-fill-mode: forwards;
+}
+@keyframes showHeader {
+	0% {
+		transform: translateY(-100%);
+	}
+	100% {
+		transform: translateY(0);
 	}
 }

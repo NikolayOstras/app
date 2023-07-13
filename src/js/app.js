@@ -1,5 +1,6 @@
+import burger from './components/burger'
 import $ from './components/dom'
-
+import header from './components/header'
 // fix mobile nav bar
 const documentHeight = () => {
 	const doc = document.documentElement
@@ -13,8 +14,5 @@ const headerHeight = () => {
 	doc.style.setProperty('--header-height', `${$.header.offsetHeight}px`)
 }
 headerHeight()
-// burger
-$.burger.addEventListener('click', () => {
-	$.burger.classList.toggle('is-active')
-	$.menu.classList.toggle('is-active')
-})
+burger()
+window.addEventListener('scroll', () => header())
