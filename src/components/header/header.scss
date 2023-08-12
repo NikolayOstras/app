@@ -6,6 +6,10 @@
 	backdrop-filter: blur(20px);
 	color: #eeeeee;
 	font-size: 1.6rem;
+	@media (--md) {
+		position: fixed;
+		width: 100%;
+	}
 }
 
 .menu {

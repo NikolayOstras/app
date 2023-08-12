@@ -1,5 +1,8 @@
 "use strict";
 (() => {
+  var __defProp = Object.defineProperty;
+  var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
   // node_modules/alpinejs/dist/module.esm.js
   var flushPending = false;
   var flushing = false;
@@ -8,22 +11,26 @@
   function scheduler(callback) {
     queueJob(callback);
   }
+  __name(scheduler, "scheduler");
   function queueJob(job) {
     if (!queue.includes(job))
       queue.push(job);
     queueFlush();
   }
+  __name(queueJob, "queueJob");
   function dequeueJob(job) {
     let index = queue.indexOf(job);
     if (index !== -1 && index > lastFlushedIndex)
       queue.splice(index, 1);
   }
+  __name(dequeueJob, "dequeueJob");
   function queueFlush() {
     if (!flushing && !flushPending) {
       flushPending = true;
       queueMicrotask(flushJobs);
     }
   }
+  __name(queueFlush, "queueFlush");
   function flushJobs() {
     flushPending = false;
     flushing = true;
@@ -35,6 +42,7 @@
     lastFlushedIndex = -1;
     flushing = false;
   }
+  __name(flushJobs, "flushJobs");
   var reactive;
   var effect;
   var release;
@@ -45,25 +53,28 @@
     callback();
     shouldSchedule = true;
   }
+  __name(disableEffectScheduling, "disableEffectScheduling");
   function setReactivityEngine(engine) {
     reactive = engine.reactive;
     release = engine.release;
-    effect = (callback) => engine.effect(callback, { scheduler: (task) => {
+    effect = /* @__PURE__ */ __name((callback) => engine.effect(callback, { scheduler: (task) => {
       if (shouldSchedule) {
         scheduler(task);
       } else {
         task();
       }
-    } });
+    } }), "effect");
     raw = engine.raw;
   }
+  __name(setReactivityEngine, "setReactivityEngine");
   function overrideEffect(override) {
     effect = override;
   }
+  __name(overrideEffect, "overrideEffect");
   function elementBoundEffect(el) {
-    let cleanup2 = () => {
-    };
-    let wrappedEffect = (callback) => {
+    let cleanup2 = /* @__PURE__ */ __name(() => {
+    }, "cleanup2");
+    let wrappedEffect = /* @__PURE__ */ __name((callback) => {
       let effectReference = effect(callback);
       if (!el._x_effects) {
         el._x_effects = /* @__PURE__ */ new Set();
@@ -72,24 +83,26 @@
         };
       }
       el._x_effects.add(effectReference);
-      cleanup2 = () => {
+      cleanup2 = /* @__PURE__ */ __name(() => {
         if (effectReference === void 0)
           return;
         el._x_effects.delete(effectReference);
         release(effectReference);
-      };
+      }, "cleanup2");
       return effectReference;
-    };
+    }, "wrappedEffect");
     return [wrappedEffect, () => {
       cleanup2();
     }];
   }
+  __name(elementBoundEffect, "elementBoundEffect");
   var onAttributeAddeds = [];
   var onElRemoveds = [];
   var onElAddeds = [];
   function onElAdded(callback) {
     onElAddeds.push(callback);
   }
+  __name(onElAdded, "onElAdded");
   function onElRemoved(el, callback) {
     if (typeof callback === "function") {
       if (!el._x_cleanups)
@@ -100,9 +113,11 @@
       onElRemoveds.push(callback);
     }
   }
+  __name(onElRemoved, "onElRemoved");
   function onAttributesAdded(callback) {
     onAttributeAddeds.push(callback);
   }
+  __name(onAttributesAdded, "onAttributesAdded");
   function onAttributeRemoved(el, name, callback) {
     if (!el._x_attributeCleanups)
       el._x_attributeCleanups = {};
@@ -110,6 +125,7 @@
       el._x_attributeCleanups[name] = [];
     el._x_attributeCleanups[name].push(callback);
   }
+  __name(onAttributeRemoved, "onAttributeRemoved");
   function cleanupAttributes(el, names) {
     if (!el._x_attributeCleanups)
       return;
@@ -120,17 +136,20 @@
       }
     });
   }
+  __name(cleanupAttributes, "cleanupAttributes");
   var observer = new MutationObserver(onMutate);
   var currentlyObserving = false;
   function startObservingMutations() {
     observer.observe(document, { subtree: true, childList: true, attributes: true, attributeOldValue: true });
     currentlyObserving = true;
   }
+  __name(startObservingMutations, "startObservingMutations");
   function stopObservingMutations() {
     flushObserver();
     observer.disconnect();
     currentlyObserving = false;
   }
+  __name(stopObservingMutations, "stopObservingMutations");
   var recordQueue = [];
   var willProcessRecordQueue = false;
   function flushObserver() {
@@ -143,10 +162,12 @@
       });
     }
   }
+  __name(flushObserver, "flushObserver");
   function processRecordQueue() {
     onMutate(recordQueue);
     recordQueue.length = 0;
   }
+  __name(processRecordQueue, "processRecordQueue");
   function mutateDom(callback) {
     if (!currentlyObserving)
       return callback();
@@ -155,16 +176,19 @@
     startObservingMutations();
     return result;
   }
+  __name(mutateDom, "mutateDom");
   var isCollecting = false;
   var deferredMutations = [];
   function deferMutations() {
     isCollecting = true;
   }
+  __name(deferMutations, "deferMutations");
   function flushAndStopDeferringMutations() {
     isCollecting = false;
     onMutate(deferredMutations);
     deferredMutations = [];
   }
+  __name(flushAndStopDeferringMutations, "flushAndStopDeferringMutations");
   function onMutate(mutations) {
     if (isCollecting) {
       deferredMutations = deferredMutations.concat(mutations);
@@ -185,16 +209,16 @@
         let el = mutations[i].target;
         let name = mutations[i].attributeName;
         let oldValue = mutations[i].oldValue;
-        let add2 = () => {
+        let add2 = /* @__PURE__ */ __name(() => {
           if (!addedAttributes.has(el))
             addedAttributes.set(el, []);
           addedAttributes.get(el).push({ name, value: el.getAttribute(name) });
-        };
-        let remove = () => {
+        }, "add2");
+        let remove = /* @__PURE__ */ __name(() => {
           if (!removedAttributes.has(el))
             removedAttributes.set(el, []);
           removedAttributes.get(el).push(name);
-        };
+        }, "remove");
         if (el.hasAttribute(name) && oldValue === null) {
           add2();
         } else if (el.hasAttribute(name)) {
@@ -244,15 +268,18 @@
     addedAttributes = null;
     removedAttributes = null;
   }
+  __name(onMutate, "onMutate");
   function scope(node) {
     return mergeProxies(closestDataStack(node));
   }
+  __name(scope, "scope");
   function addScopeToNode(node, data2, referenceNode) {
     node._x_dataStack = [data2, ...closestDataStack(referenceNode || node)];
     return () => {
       node._x_dataStack = node._x_dataStack.filter((i) => i !== data2);
     };
   }
+  __name(addScopeToNode, "addScopeToNode");
   function closestDataStack(node) {
     if (node._x_dataStack)
       return node._x_dataStack;
@@ -264,6 +291,7 @@
     }
     return closestDataStack(node.parentNode);
   }
+  __name(closestDataStack, "closestDataStack");
   function mergeProxies(objects) {
     let thisProxy = new Proxy({}, {
       ownKeys: () => {
@@ -312,9 +340,10 @@
     });
     return thisProxy;
   }
+  __name(mergeProxies, "mergeProxies");
   function initInterceptors(data2) {
-    let isObject2 = (val) => typeof val === "object" && !Array.isArray(val) && val !== null;
-    let recurse = (obj, basePath = "") => {
+    let isObject2 = /* @__PURE__ */ __name((val) => typeof val === "object" && !Array.isArray(val) && val !== null, "isObject2");
+    let recurse = /* @__PURE__ */ __name((obj, basePath = "") => {
       Object.entries(Object.getOwnPropertyDescriptors(obj)).forEach(([key, { value, enumerable }]) => {
         if (enumerable === false || value === void 0)
           return;
@@ -327,9 +356,10 @@
           }
         }
       });
-    };
+    }, "recurse");
     return recurse(data2);
   }
+  __name(initInterceptors, "initInterceptors");
   function interceptor(callback, mutateObj = () => {
   }) {
     let obj = {
@@ -354,9 +384,11 @@
       return obj;
     };
   }
+  __name(interceptor, "interceptor");
   function get(obj, path) {
     return path.split(".").reduce((carry, segment) => carry[segment], obj);
   }
+  __name(get, "get");
   function set(obj, path, value) {
     if (typeof path === "string")
       path = path.split(".");
@@ -373,10 +405,12 @@
       }
     }
   }
+  __name(set, "set");
   var magics = {};
   function magic(name, callback) {
     magics[name] = callback;
   }
+  __name(magic, "magic");
   function injectMagics(obj, el) {
     Object.entries(magics).forEach(([name, callback]) => {
       let memoizedUtilities = null;
@@ -390,6 +424,7 @@
           return memoizedUtilities;
         }
       }
+      __name(getUtilities, "getUtilities");
       Object.defineProperty(obj, `$${name}`, {
         get() {
           return callback(el, getUtilities());
@@ -399,6 +434,7 @@
     });
     return obj;
   }
+  __name(injectMagics, "injectMagics");
   function tryCatch(el, expression, callback, ...args) {
     try {
       return callback(...args);
@@ -406,6 +442,7 @@
       handleError(e, el, expression);
     }
   }
+  __name(tryCatch, "tryCatch");
   function handleError(error2, el, expression = void 0) {
     Object.assign(error2, { el, expression });
     console.warn(`Alpine Expression Error: ${error2.message}
@@ -415,6 +452,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       throw error2;
     }, 0);
   }
+  __name(handleError, "handleError");
   var shouldAutoEvaluateFunctions = true;
   function dontAutoEvaluateFunctions(callback) {
     let cache = shouldAutoEvaluateFunctions;
@@ -423,18 +461,22 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     shouldAutoEvaluateFunctions = cache;
     return result;
   }
+  __name(dontAutoEvaluateFunctions, "dontAutoEvaluateFunctions");
   function evaluate(el, expression, extras = {}) {
     let result;
     evaluateLater(el, expression)((value) => result = value, extras);
     return result;
   }
+  __name(evaluate, "evaluate");
   function evaluateLater(...args) {
     return theEvaluatorFunction(...args);
   }
+  __name(evaluateLater, "evaluateLater");
   var theEvaluatorFunction = normalEvaluator;
   function setEvaluator(newEvaluator) {
     theEvaluatorFunction = newEvaluator;
   }
+  __name(setEvaluator, "setEvaluator");
   function normalEvaluator(el, expression) {
     let overriddenMagics = {};
     injectMagics(overriddenMagics, el);
@@ -442,6 +484,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     let evaluator = typeof expression === "function" ? generateEvaluatorFromFunction(dataStack, expression) : generateEvaluatorFromString(dataStack, expression, el);
     return tryCatch.bind(null, el, expression, evaluator);
   }
+  __name(normalEvaluator, "normalEvaluator");
   function generateEvaluatorFromFunction(dataStack, func) {
     return (receiver = () => {
     }, { scope: scope2 = {}, params = [] } = {}) => {
@@ -449,6 +492,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       runIfTypeOfFunction(receiver, result);
     };
   }
+  __name(generateEvaluatorFromFunction, "generateEvaluatorFromFunction");
   var evaluatorMemo = {};
   function generateFunctionFromString(expression, el) {
     if (evaluatorMemo[expression]) {
@@ -457,18 +501,19 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     let AsyncFunction = Object.getPrototypeOf(async function() {
     }).constructor;
     let rightSideSafeExpression = /^[\n\s]*if.*\(.*\)/.test(expression) || /^(let|const)\s/.test(expression) ? `(async()=>{ ${expression} })()` : expression;
-    const safeAsyncFunction = () => {
+    const safeAsyncFunction = /* @__PURE__ */ __name(() => {
       try {
         return new AsyncFunction(["__self", "scope"], `with (scope) { __self.result = ${rightSideSafeExpression} }; __self.finished = true; return __self.result;`);
       } catch (error2) {
         handleError(error2, el, expression);
         return Promise.resolve();
       }
-    };
+    }, "safeAsyncFunction");
     let func = safeAsyncFunction();
     evaluatorMemo[expression] = func;
     return func;
   }
+  __name(generateFunctionFromString, "generateFunctionFromString");
   function generateEvaluatorFromString(dataStack, expression, el) {
     let func = generateFunctionFromString(expression, el);
     return (receiver = () => {
@@ -489,6 +534,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     };
   }
+  __name(generateEvaluatorFromString, "generateEvaluatorFromString");
   function runIfTypeOfFunction(receiver, value, scope2, params, el) {
     if (shouldAutoEvaluateFunctions && typeof value === "function") {
       let result = value.apply(scope2, params);
@@ -503,13 +549,16 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       receiver(value);
     }
   }
+  __name(runIfTypeOfFunction, "runIfTypeOfFunction");
   var prefixAsString = "x-";
   function prefix(subject = "") {
     return prefixAsString + subject;
   }
+  __name(prefix, "prefix");
   function setPrefix(newPrefix) {
     prefixAsString = newPrefix;
   }
+  __name(setPrefix, "setPrefix");
   var directiveHandlers = {};
   function directive(name, callback) {
     directiveHandlers[name] = callback;
@@ -524,6 +573,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     };
   }
+  __name(directive, "directive");
   function directives(el, attributes, originalAttributeOverride) {
     attributes = Array.from(attributes);
     if (el._x_virtualDirectives) {
@@ -546,9 +596,11 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return getDirectiveHandler(el, directive2);
     });
   }
+  __name(directives, "directives");
   function attributesOnly(attributes) {
     return Array.from(attributes).map(toTransformedAttributes()).filter((attr) => !outNonAlpineAttributes(attr));
   }
+  __name(attributesOnly, "attributesOnly");
   var isDeferringHandlers = false;
   var directiveHandlerStacks = /* @__PURE__ */ new Map();
   var currentHandlerStackKey = Symbol();
@@ -557,21 +609,22 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     let key = Symbol();
     currentHandlerStackKey = key;
     directiveHandlerStacks.set(key, []);
-    let flushHandlers = () => {
+    let flushHandlers = /* @__PURE__ */ __name(() => {
       while (directiveHandlerStacks.get(key).length)
         directiveHandlerStacks.get(key).shift()();
       directiveHandlerStacks.delete(key);
-    };
-    let stopDeferring = () => {
+    }, "flushHandlers");
+    let stopDeferring = /* @__PURE__ */ __name(() => {
       isDeferringHandlers = false;
       flushHandlers();
-    };
+    }, "stopDeferring");
     callback(flushHandlers);
     stopDeferring();
   }
+  __name(deferHandlingDirectives, "deferHandlingDirectives");
   function getElementBoundUtilities(el) {
     let cleanups = [];
-    let cleanup2 = (callback) => cleanups.push(callback);
+    let cleanup2 = /* @__PURE__ */ __name((callback) => cleanups.push(callback), "cleanup2");
     let [effect3, cleanupEffect] = elementBoundEffect(el);
     cleanups.push(cleanupEffect);
     let utilities = {
@@ -581,31 +634,33 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       evaluateLater: evaluateLater.bind(evaluateLater, el),
       evaluate: evaluate.bind(evaluate, el)
     };
-    let doCleanup = () => cleanups.forEach((i) => i());
+    let doCleanup = /* @__PURE__ */ __name(() => cleanups.forEach((i) => i()), "doCleanup");
     return [utilities, doCleanup];
   }
+  __name(getElementBoundUtilities, "getElementBoundUtilities");
   function getDirectiveHandler(el, directive2) {
-    let noop = () => {
-    };
+    let noop = /* @__PURE__ */ __name(() => {
+    }, "noop");
     let handler4 = directiveHandlers[directive2.type] || noop;
     let [utilities, cleanup2] = getElementBoundUtilities(el);
     onAttributeRemoved(el, directive2.original, cleanup2);
-    let fullHandler = () => {
+    let fullHandler = /* @__PURE__ */ __name(() => {
       if (el._x_ignore || el._x_ignoreSelf)
         return;
       handler4.inline && handler4.inline(el, directive2, utilities);
       handler4 = handler4.bind(handler4, el, directive2, utilities);
       isDeferringHandlers ? directiveHandlerStacks.get(currentHandlerStackKey).push(handler4) : handler4();
-    };
+    }, "fullHandler");
     fullHandler.runCleanups = cleanup2;
     return fullHandler;
   }
-  var startingWith = (subject, replacement) => ({ name, value }) => {
+  __name(getDirectiveHandler, "getDirectiveHandler");
+  var startingWith = /* @__PURE__ */ __name((subject, replacement) => ({ name, value }) => {
     if (name.startsWith(subject))
       name = name.replace(subject, replacement);
     return { name, value };
-  };
-  var into = (i) => i;
+  }, "startingWith");
+  var into = /* @__PURE__ */ __name((i) => i, "into");
   function toTransformedAttributes(callback = () => {
   }) {
     return ({ name, value }) => {
@@ -617,14 +672,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return { name: newName, value: newValue };
     };
   }
+  __name(toTransformedAttributes, "toTransformedAttributes");
   var attributeTransformers = [];
   function mapAttributes(callback) {
     attributeTransformers.push(callback);
   }
+  __name(mapAttributes, "mapAttributes");
   function outNonAlpineAttributes({ name }) {
     return alpineAttributeRegex().test(name);
   }
-  var alpineAttributeRegex = () => new RegExp(`^${prefixAsString}([^:^.]+)\\b`);
+  __name(outNonAlpineAttributes, "outNonAlpineAttributes");
+  var alpineAttributeRegex = /* @__PURE__ */ __name(() => new RegExp(`^${prefixAsString}([^:^.]+)\\b`), "alpineAttributeRegex");
   function toParsedDirectives(transformedAttributeMap, originalAttributeOverride) {
     return ({ name, value }) => {
       let typeMatch = name.match(alpineAttributeRegex());
@@ -640,6 +698,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       };
     };
   }
+  __name(toParsedDirectives, "toParsedDirectives");
   var DEFAULT = "DEFAULT";
   var directiveOrder = [
     "ignore",
@@ -662,6 +721,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     let typeB = directiveOrder.indexOf(b.type) === -1 ? DEFAULT : b.type;
     return directiveOrder.indexOf(typeA) - directiveOrder.indexOf(typeB);
   }
+  __name(byPriority, "byPriority");
   function dispatch(el, name, detail = {}) {
     el.dispatchEvent(new CustomEvent(name, {
       detail,
@@ -670,6 +730,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       cancelable: true
     }));
   }
+  __name(dispatch, "dispatch");
   function walk(el, callback) {
     if (typeof ShadowRoot === "function" && el instanceof ShadowRoot) {
       Array.from(el.children).forEach((el2) => walk(el2, callback));
@@ -685,9 +746,11 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       node = node.nextElementSibling;
     }
   }
+  __name(walk, "walk");
   function warn(message, ...args) {
     console.warn(`Alpine Warning: ${message}`, ...args);
   }
+  __name(warn, "warn");
   var started = false;
   function start() {
     if (started)
@@ -703,26 +766,31 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     onAttributesAdded((el, attrs) => {
       directives(el, attrs).forEach((handle) => handle());
     });
-    let outNestedComponents = (el) => !closestRoot(el.parentElement, true);
+    let outNestedComponents = /* @__PURE__ */ __name((el) => !closestRoot(el.parentElement, true), "outNestedComponents");
     Array.from(document.querySelectorAll(allSelectors())).filter(outNestedComponents).forEach((el) => {
       initTree(el);
     });
     dispatch(document, "alpine:initialized");
   }
+  __name(start, "start");
   var rootSelectorCallbacks = [];
   var initSelectorCallbacks = [];
   function rootSelectors() {
     return rootSelectorCallbacks.map((fn) => fn());
   }
+  __name(rootSelectors, "rootSelectors");
   function allSelectors() {
     return rootSelectorCallbacks.concat(initSelectorCallbacks).map((fn) => fn());
   }
+  __name(allSelectors, "allSelectors");
   function addRootSelector(selectorCallback) {
     rootSelectorCallbacks.push(selectorCallback);
   }
+  __name(addRootSelector, "addRootSelector");
   function addInitSelector(selectorCallback) {
     initSelectorCallbacks.push(selectorCallback);
   }
+  __name(addInitSelector, "addInitSelector");
   function closestRoot(el, includeInitSelectors = false) {
     return findClosest(el, (element) => {
       const selectors = includeInitSelectors ? allSelectors() : rootSelectors();
@@ -730,6 +798,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         return true;
     });
   }
+  __name(closestRoot, "closestRoot");
   function findClosest(el, callback) {
     if (!el)
       return;
@@ -741,13 +810,16 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return;
     return findClosest(el.parentElement, callback);
   }
+  __name(findClosest, "findClosest");
   function isRoot(el) {
     return rootSelectors().some((selector) => el.matches(selector));
   }
+  __name(isRoot, "isRoot");
   var initInterceptors2 = [];
   function interceptInit(callback) {
     initInterceptors2.push(callback);
   }
+  __name(interceptInit, "interceptInit");
   function initTree(el, walker = walk, intercept = () => {
   }) {
     deferHandlingDirectives(() => {
@@ -759,9 +831,11 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       });
     });
   }
+  __name(initTree, "initTree");
   function destroyTree(root) {
     walk(root, (el) => cleanupAttributes(el));
   }
+  __name(destroyTree, "destroyTree");
   var tickStack = [];
   var isHolding = false;
   function nextTick(callback = () => {
@@ -778,14 +852,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       });
     });
   }
+  __name(nextTick, "nextTick");
   function releaseNextTicks() {
     isHolding = false;
     while (tickStack.length)
       tickStack.shift()();
   }
+  __name(releaseNextTicks, "releaseNextTicks");
   function holdNextTicks() {
     isHolding = true;
   }
+  __name(holdNextTicks, "holdNextTicks");
   function setClasses(el, value) {
     if (Array.isArray(value)) {
       return setClassesFromString(el, value.join(" "));
@@ -796,20 +873,22 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return setClassesFromString(el, value);
   }
+  __name(setClasses, "setClasses");
   function setClassesFromString(el, classString) {
-    let split = (classString2) => classString2.split(" ").filter(Boolean);
-    let missingClasses = (classString2) => classString2.split(" ").filter((i) => !el.classList.contains(i)).filter(Boolean);
-    let addClassesAndReturnUndo = (classes) => {
+    let split = /* @__PURE__ */ __name((classString2) => classString2.split(" ").filter(Boolean), "split");
+    let missingClasses = /* @__PURE__ */ __name((classString2) => classString2.split(" ").filter((i) => !el.classList.contains(i)).filter(Boolean), "missingClasses");
+    let addClassesAndReturnUndo = /* @__PURE__ */ __name((classes) => {
       el.classList.add(...classes);
       return () => {
         el.classList.remove(...classes);
       };
-    };
+    }, "addClassesAndReturnUndo");
     classString = classString === true ? classString = "" : classString || "";
     return addClassesAndReturnUndo(missingClasses(classString));
   }
+  __name(setClassesFromString, "setClassesFromString");
   function setClassesFromObject(el, classObject) {
-    let split = (classString) => classString.split(" ").filter(Boolean);
+    let split = /* @__PURE__ */ __name((classString) => classString.split(" ").filter(Boolean), "split");
     let forAdd = Object.entries(classObject).flatMap(([classString, bool]) => bool ? split(classString) : false).filter(Boolean);
     let forRemove = Object.entries(classObject).flatMap(([classString, bool]) => !bool ? split(classString) : false).filter(Boolean);
     let added = [];
@@ -831,12 +910,14 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       added.forEach((i) => el.classList.remove(i));
     };
   }
+  __name(setClassesFromObject, "setClassesFromObject");
   function setStyles(el, value) {
     if (typeof value === "object" && value !== null) {
       return setStylesFromObject(el, value);
     }
     return setStylesFromString(el, value);
   }
+  __name(setStyles, "setStyles");
   function setStylesFromObject(el, value) {
     let previousStyles = {};
     Object.entries(value).forEach(([key, value2]) => {
@@ -855,6 +936,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       setStyles(el, previousStyles);
     };
   }
+  __name(setStylesFromObject, "setStylesFromObject");
   function setStylesFromString(el, value) {
     let cache = el.getAttribute("style", value);
     el.setAttribute("style", value);
@@ -862,9 +944,11 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       el.setAttribute("style", cache || "");
     };
   }
+  __name(setStylesFromString, "setStylesFromString");
   function kebabCase(subject) {
     return subject.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
   }
+  __name(kebabCase, "kebabCase");
   function once(callback, fallback = () => {
   }) {
     let called = false;
@@ -877,6 +961,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     };
   }
+  __name(once, "once");
   directive("transition", (el, { value, modifiers, expression }, { evaluate: evaluate2 }) => {
     if (typeof expression === "function")
       expression = evaluate2(expression);
@@ -912,6 +997,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     };
     directiveStorageMap[stage](classString);
   }
+  __name(registerTransitionsFromClassString, "registerTransitionsFromClassString");
   function registerTransitionsFromHelper(el, modifiers, stage) {
     registerTransitionObject(el, setStyles);
     let doesntSpecify = !modifiers.includes("in") && !modifiers.includes("out") && !stage;
@@ -969,6 +1055,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       };
     }
   }
+  __name(registerTransitionsFromHelper, "registerTransitionsFromHelper");
   function registerTransitionObject(el, setFunction, defaultValue = {}) {
     if (!el._x_transition)
       el._x_transition = {
@@ -994,9 +1081,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         }
       };
   }
+  __name(registerTransitionObject, "registerTransitionObject");
   window.Element.prototype._x_toggleAndCascadeWithTransitions = function(el, value, show, hide) {
     const nextTick2 = document.visibilityState === "visible" ? requestAnimationFrame : setTimeout;
-    let clickAwayCompatibleShow = () => nextTick2(show);
+    let clickAwayCompatibleShow = /* @__PURE__ */ __name(() => nextTick2(show), "clickAwayCompatibleShow");
     if (value) {
       if (el._x_transition && (el._x_transition.enter || el._x_transition.leave)) {
         el._x_transition.enter && (Object.entries(el._x_transition.enter.during).length || Object.entries(el._x_transition.enter.start).length || Object.entries(el._x_transition.enter.end).length) ? el._x_transition.in(show) : clickAwayCompatibleShow();
@@ -1018,7 +1106,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         closest._x_hideChildren.push(el);
       } else {
         nextTick2(() => {
-          let hideAfterChildren = (el2) => {
+          let hideAfterChildren = /* @__PURE__ */ __name((el2) => {
             let carry = Promise.all([
               el2._x_hidePromise,
               ...(el2._x_hideChildren || []).map(hideAfterChildren)
@@ -1026,7 +1114,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
             delete el2._x_hidePromise;
             delete el2._x_hideChildren;
             return carry;
-          };
+          }, "hideAfterChildren");
           hideAfterChildren(el).catch((e) => {
             if (!e.isFromCancelledTransition)
               throw e;
@@ -1041,6 +1129,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return;
     return parent._x_hidePromise ? parent : closestHide(parent);
   }
+  __name(closestHide, "closestHide");
   function transition(el, setFunction, { during, start: start2, end } = {}, before = () => {
   }, after = () => {
   }) {
@@ -1071,6 +1160,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     });
   }
+  __name(transition, "transition");
   function performTransition(el, stages) {
     let interrupted, reachedBefore, reachedEnd;
     let finish = once(() => {
@@ -1130,6 +1220,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       });
     });
   }
+  __name(performTransition, "performTransition");
   function modifierValue(modifiers, key, fallback) {
     if (modifiers.indexOf(key) === -1)
       return fallback;
@@ -1152,14 +1243,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return rawValue;
   }
+  __name(modifierValue, "modifierValue");
   var isCloning = false;
   function skipDuringClone(callback, fallback = () => {
   }) {
     return (...args) => isCloning ? fallback(...args) : callback(...args);
   }
+  __name(skipDuringClone, "skipDuringClone");
   function onlyDuringClone(callback) {
     return (...args) => isCloning && callback(...args);
   }
+  __name(onlyDuringClone, "onlyDuringClone");
   function clone(oldEl, newEl) {
     if (!newEl._x_dataStack)
       newEl._x_dataStack = oldEl._x_dataStack;
@@ -1169,18 +1263,20 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
     isCloning = false;
   }
+  __name(clone, "clone");
   function cloneTree(el) {
     let hasRunThroughFirstEl = false;
-    let shallowWalker = (el2, callback) => {
+    let shallowWalker = /* @__PURE__ */ __name((el2, callback) => {
       walk(el2, (el3, skip) => {
         if (hasRunThroughFirstEl && isRoot(el3))
           return skip();
         hasRunThroughFirstEl = true;
         callback(el3, skip);
       });
-    };
+    }, "shallowWalker");
     initTree(el, shallowWalker);
   }
+  __name(cloneTree, "cloneTree");
   function dontRegisterReactiveSideEffects(callback) {
     let cache = effect;
     overrideEffect((callback2, el) => {
@@ -1192,6 +1288,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     callback();
     overrideEffect(cache);
   }
+  __name(dontRegisterReactiveSideEffects, "dontRegisterReactiveSideEffects");
   function bind(el, name, value, modifiers = []) {
     if (!el._x_bindings)
       el._x_bindings = reactive({});
@@ -1216,6 +1313,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         break;
     }
   }
+  __name(bind, "bind");
   function bindInputValue(el, value) {
     if (el.type === "radio") {
       if (el.attributes.value === void 0) {
@@ -1244,20 +1342,24 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       el.value = value;
     }
   }
+  __name(bindInputValue, "bindInputValue");
   function bindClasses(el, value) {
     if (el._x_undoAddedClasses)
       el._x_undoAddedClasses();
     el._x_undoAddedClasses = setClasses(el, value);
   }
+  __name(bindClasses, "bindClasses");
   function bindStyles(el, value) {
     if (el._x_undoAddedStyles)
       el._x_undoAddedStyles();
     el._x_undoAddedStyles = setStyles(el, value);
   }
+  __name(bindStyles, "bindStyles");
   function bindAttributeAndProperty(el, name, value) {
     bindAttribute(el, name, value);
     setPropertyIfChanged(el, name, value);
   }
+  __name(bindAttributeAndProperty, "bindAttributeAndProperty");
   function bindAttribute(el, name, value) {
     if ([null, void 0, false].includes(value) && attributeShouldntBePreservedIfFalsy(name)) {
       el.removeAttribute(name);
@@ -1267,16 +1369,19 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       setIfChanged(el, name, value);
     }
   }
+  __name(bindAttribute, "bindAttribute");
   function setIfChanged(el, attrName, value) {
     if (el.getAttribute(attrName) != value) {
       el.setAttribute(attrName, value);
     }
   }
+  __name(setIfChanged, "setIfChanged");
   function setPropertyIfChanged(el, propName, value) {
     if (el[propName] !== value) {
       el[propName] = value;
     }
   }
+  __name(setPropertyIfChanged, "setPropertyIfChanged");
   function updateSelect(el, value) {
     const arrayWrappedValue = [].concat(value).map((value2) => {
       return value2 + "";
@@ -1285,12 +1390,15 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       option.selected = arrayWrappedValue.includes(option.value);
     });
   }
+  __name(updateSelect, "updateSelect");
   function camelCase(subject) {
     return subject.toLowerCase().replace(/-(\w)/g, (match, char) => char.toUpperCase());
   }
+  __name(camelCase, "camelCase");
   function checkedAttrLooseCompare(valueA, valueB) {
     return valueA == valueB;
   }
+  __name(checkedAttrLooseCompare, "checkedAttrLooseCompare");
   function isBooleanAttr(attrName) {
     const booleanAttributes = [
       "disabled",
@@ -1321,14 +1429,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     ];
     return booleanAttributes.includes(attrName);
   }
+  __name(isBooleanAttr, "isBooleanAttr");
   function attributeShouldntBePreservedIfFalsy(name) {
     return !["aria-pressed", "aria-checked", "aria-expanded", "aria-selected"].includes(name);
   }
+  __name(attributeShouldntBePreservedIfFalsy, "attributeShouldntBePreservedIfFalsy");
   function getBinding(el, name, fallback) {
     if (el._x_bindings && el._x_bindings[name] !== void 0)
       return el._x_bindings[name];
     return getAttributeBinding(el, name, fallback);
   }
+  __name(getBinding, "getBinding");
   function extractProp(el, name, fallback, extract = true) {
     if (el._x_bindings && el._x_bindings[name] !== void 0)
       return el._x_bindings[name];
@@ -1341,6 +1452,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return getAttributeBinding(el, name, fallback);
   }
+  __name(extractProp, "extractProp");
   function getAttributeBinding(el, name, fallback) {
     let attr = el.getAttribute(name);
     if (attr === null)
@@ -1352,18 +1464,20 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return attr;
   }
+  __name(getAttributeBinding, "getAttributeBinding");
   function debounce(func, wait) {
     var timeout;
     return function() {
       var context = this, args = arguments;
-      var later = function() {
+      var later = /* @__PURE__ */ __name(function() {
         timeout = null;
         func.apply(context, args);
-      };
+      }, "later");
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
   }
+  __name(debounce, "debounce");
   function throttle(func, limit) {
     let inThrottle;
     return function() {
@@ -1375,10 +1489,12 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     };
   }
+  __name(throttle, "throttle");
   function plugin(callback) {
     let callbacks = Array.isArray(callback) ? callback : [callback];
     callbacks.forEach((i) => i(alpine_default));
   }
+  __name(plugin, "plugin");
   var stores = {};
   var isReactive = false;
   function store(name, value) {
@@ -1395,9 +1511,11 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     initInterceptors(stores[name]);
   }
+  __name(store, "store");
   function getStores() {
     return stores;
   }
+  __name(getStores, "getStores");
   var binds = {};
   function bind2(name, bindings) {
     let getBindings = typeof bindings !== "function" ? () => bindings : bindings;
@@ -1407,6 +1525,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       binds[name] = getBindings;
     }
   }
+  __name(bind2, "bind2");
   function injectBindingProviders(obj) {
     Object.entries(binds).forEach(([name, callback]) => {
       Object.defineProperty(obj, name, {
@@ -1419,6 +1538,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
     return obj;
   }
+  __name(injectBindingProviders, "injectBindingProviders");
   function applyBindingsObject(el, obj, original) {
     let cleanupRunners = [];
     while (cleanupRunners.length)
@@ -1439,10 +1559,12 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       handle();
     });
   }
+  __name(applyBindingsObject, "applyBindingsObject");
   var datas = {};
   function data(name, callback) {
     datas[name] = callback;
   }
+  __name(data, "data");
   function injectDataProviders(obj, context) {
     Object.entries(datas).forEach(([name, callback]) => {
       Object.defineProperty(obj, name, {
@@ -1456,6 +1578,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
     return obj;
   }
+  __name(injectDataProviders, "injectDataProviders");
   var Alpine = {
     get reactive() {
       return reactive;
@@ -1524,31 +1647,32 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return expectsLowerCase ? (val) => !!map[val.toLowerCase()] : (val) => !!map[val];
   }
+  __name(makeMap, "makeMap");
   var specialBooleanAttrs = `itemscope,allowfullscreen,formnovalidate,ismap,nomodule,novalidate,readonly`;
   var isBooleanAttr2 = /* @__PURE__ */ makeMap(specialBooleanAttrs + `,async,autofocus,autoplay,controls,default,defer,disabled,hidden,loop,open,required,reversed,scoped,seamless,checked,muted,multiple,selected`);
   var EMPTY_OBJ = true ? Object.freeze({}) : {};
   var EMPTY_ARR = true ? Object.freeze([]) : [];
   var extend = Object.assign;
   var hasOwnProperty = Object.prototype.hasOwnProperty;
-  var hasOwn = (val, key) => hasOwnProperty.call(val, key);
+  var hasOwn = /* @__PURE__ */ __name((val, key) => hasOwnProperty.call(val, key), "hasOwn");
   var isArray = Array.isArray;
-  var isMap = (val) => toTypeString(val) === "[object Map]";
-  var isString = (val) => typeof val === "string";
-  var isSymbol = (val) => typeof val === "symbol";
-  var isObject = (val) => val !== null && typeof val === "object";
+  var isMap = /* @__PURE__ */ __name((val) => toTypeString(val) === "[object Map]", "isMap");
+  var isString = /* @__PURE__ */ __name((val) => typeof val === "string", "isString");
+  var isSymbol = /* @__PURE__ */ __name((val) => typeof val === "symbol", "isSymbol");
+  var isObject = /* @__PURE__ */ __name((val) => val !== null && typeof val === "object", "isObject");
   var objectToString = Object.prototype.toString;
-  var toTypeString = (value) => objectToString.call(value);
-  var toRawType = (value) => {
+  var toTypeString = /* @__PURE__ */ __name((value) => objectToString.call(value), "toTypeString");
+  var toRawType = /* @__PURE__ */ __name((value) => {
     return toTypeString(value).slice(8, -1);
-  };
-  var isIntegerKey = (key) => isString(key) && key !== "NaN" && key[0] !== "-" && "" + parseInt(key, 10) === key;
-  var cacheStringFunction = (fn) => {
+  }, "toRawType");
+  var isIntegerKey = /* @__PURE__ */ __name((key) => isString(key) && key !== "NaN" && key[0] !== "-" && "" + parseInt(key, 10) === key, "isIntegerKey");
+  var cacheStringFunction = /* @__PURE__ */ __name((fn) => {
     const cache = /* @__PURE__ */ Object.create(null);
     return (str) => {
       const hit = cache[str];
       return hit || (cache[str] = fn(str));
     };
-  };
+  }, "cacheStringFunction");
   var camelizeRE = /-(\w)/g;
   var camelize = cacheStringFunction((str) => {
     return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : "");
@@ -1557,7 +1681,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   var hyphenate = cacheStringFunction((str) => str.replace(hyphenateRE, "-$1").toLowerCase());
   var capitalize = cacheStringFunction((str) => str.charAt(0).toUpperCase() + str.slice(1));
   var toHandlerKey = cacheStringFunction((str) => str ? `on${capitalize(str)}` : ``);
-  var hasChanged = (value, oldValue) => value !== oldValue && (value === value || oldValue === oldValue);
+  var hasChanged = /* @__PURE__ */ __name((value, oldValue) => value !== oldValue && (value === value || oldValue === oldValue), "hasChanged");
   var targetMap = /* @__PURE__ */ new WeakMap();
   var effectStack = [];
   var activeEffect;
@@ -1566,6 +1690,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   function isEffect(fn) {
     return fn && fn._isEffect === true;
   }
+  __name(isEffect, "isEffect");
   function effect2(fn, options = EMPTY_OBJ) {
     if (isEffect(fn)) {
       fn = fn.raw;
@@ -1576,6 +1701,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return effect3;
   }
+  __name(effect2, "effect2");
   function stop(effect3) {
     if (effect3.active) {
       cleanup(effect3);
@@ -1585,9 +1711,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       effect3.active = false;
     }
   }
+  __name(stop, "stop");
   var uid = 0;
   function createReactiveEffect(fn, options) {
-    const effect3 = function reactiveEffect() {
+    const effect3 = /* @__PURE__ */ __name(function reactiveEffect() {
       if (!effect3.active) {
         return fn();
       }
@@ -1604,7 +1731,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           activeEffect = effectStack[effectStack.length - 1];
         }
       }
-    };
+    }, "reactiveEffect");
     effect3.id = uid++;
     effect3.allowRecurse = !!options.allowRecurse;
     effect3._isEffect = true;
@@ -1614,6 +1741,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     effect3.options = options;
     return effect3;
   }
+  __name(createReactiveEffect, "createReactiveEffect");
   function cleanup(effect3) {
     const { deps } = effect3;
     if (deps.length) {
@@ -1623,20 +1751,24 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       deps.length = 0;
     }
   }
+  __name(cleanup, "cleanup");
   var shouldTrack = true;
   var trackStack = [];
   function pauseTracking() {
     trackStack.push(shouldTrack);
     shouldTrack = false;
   }
+  __name(pauseTracking, "pauseTracking");
   function enableTracking() {
     trackStack.push(shouldTrack);
     shouldTrack = true;
   }
+  __name(enableTracking, "enableTracking");
   function resetTracking() {
     const last = trackStack.pop();
     shouldTrack = last === void 0 ? true : last;
   }
+  __name(resetTracking, "resetTracking");
   function track(target, type, key) {
     if (!shouldTrack || activeEffect === void 0) {
       return;
@@ -1662,13 +1794,14 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     }
   }
+  __name(track, "track");
   function trigger(target, type, key, newValue, oldValue, oldTarget) {
     const depsMap = targetMap.get(target);
     if (!depsMap) {
       return;
     }
     const effects = /* @__PURE__ */ new Set();
-    const add2 = (effectsToAdd) => {
+    const add2 = /* @__PURE__ */ __name((effectsToAdd) => {
       if (effectsToAdd) {
         effectsToAdd.forEach((effect3) => {
           if (effect3 !== activeEffect || effect3.allowRecurse) {
@@ -1676,7 +1809,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           }
         });
       }
-    };
+    }, "add2");
     if (type === "clear") {
       depsMap.forEach(add2);
     } else if (key === "length" && isArray(target)) {
@@ -1715,7 +1848,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           break;
       }
     }
-    const run = (effect3) => {
+    const run = /* @__PURE__ */ __name((effect3) => {
       if (effect3.options.onTrigger) {
         effect3.options.onTrigger({
           effect: effect3,
@@ -1732,9 +1865,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       } else {
         effect3();
       }
-    };
+    }, "run");
     effects.forEach(run);
   }
+  __name(trigger, "trigger");
   var isNonTrackableKeys = /* @__PURE__ */ makeMap(`__proto__,__v_isRef,__isVue`);
   var builtInSymbols = new Set(Object.getOwnPropertyNames(Symbol).map((key) => Symbol[key]).filter(isSymbol));
   var get2 = /* @__PURE__ */ createGetter();
@@ -1767,7 +1901,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     };
   });
   function createGetter(isReadonly = false, shallow = false) {
-    return function get3(target, key, receiver) {
+    return /* @__PURE__ */ __name(function get3(target, key, receiver) {
       if (key === "__v_isReactive") {
         return !isReadonly;
       } else if (key === "__v_isReadonly") {
@@ -1797,12 +1931,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         return isReadonly ? readonly(res) : reactive2(res);
       }
       return res;
-    };
+    }, "get3");
   }
+  __name(createGetter, "createGetter");
   var set2 = /* @__PURE__ */ createSetter();
   var shallowSet = /* @__PURE__ */ createSetter(true);
   function createSetter(shallow = false) {
-    return function set3(target, key, value, receiver) {
+    return /* @__PURE__ */ __name(function set3(target, key, value, receiver) {
       let oldValue = target[key];
       if (!shallow) {
         value = toRaw(value);
@@ -1822,8 +1957,9 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         }
       }
       return result;
-    };
+    }, "set3");
   }
+  __name(createSetter, "createSetter");
   function deleteProperty(target, key) {
     const hadKey = hasOwn(target, key);
     const oldValue = target[key];
@@ -1833,6 +1969,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return result;
   }
+  __name(deleteProperty, "deleteProperty");
   function has(target, key) {
     const result = Reflect.has(target, key);
     if (!isSymbol(key) || !builtInSymbols.has(key)) {
@@ -1840,10 +1977,12 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return result;
   }
+  __name(has, "has");
   function ownKeys(target) {
     track(target, "iterate", isArray(target) ? "length" : ITERATE_KEY);
     return Reflect.ownKeys(target);
   }
+  __name(ownKeys, "ownKeys");
   var mutableHandlers = {
     get: get2,
     set: set2,
@@ -1873,10 +2012,10 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   var shallowReadonlyHandlers = extend({}, readonlyHandlers, {
     get: shallowReadonlyGet
   });
-  var toReactive = (value) => isObject(value) ? reactive2(value) : value;
-  var toReadonly = (value) => isObject(value) ? readonly(value) : value;
-  var toShallow = (value) => value;
-  var getProto = (v) => Reflect.getPrototypeOf(v);
+  var toReactive = /* @__PURE__ */ __name((value) => isObject(value) ? reactive2(value) : value, "toReactive");
+  var toReadonly = /* @__PURE__ */ __name((value) => isObject(value) ? readonly(value) : value, "toReadonly");
+  var toShallow = /* @__PURE__ */ __name((value) => value, "toShallow");
+  var getProto = /* @__PURE__ */ __name((v) => Reflect.getPrototypeOf(v), "getProto");
   function get$1(target, key, isReadonly = false, isShallow = false) {
     target = target["__v_raw"];
     const rawTarget = toRaw(target);
@@ -1895,6 +2034,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       target.get(key);
     }
   }
+  __name(get$1, "get$1");
   function has$1(key, isReadonly = false) {
     const target = this["__v_raw"];
     const rawTarget = toRaw(target);
@@ -1905,11 +2045,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     !isReadonly && track(rawTarget, "has", rawKey);
     return key === rawKey ? target.has(key) : target.has(key) || target.has(rawKey);
   }
+  __name(has$1, "has$1");
   function size(target, isReadonly = false) {
     target = target["__v_raw"];
     !isReadonly && track(toRaw(target), "iterate", ITERATE_KEY);
     return Reflect.get(target, "size", target);
   }
+  __name(size, "size");
   function add(value) {
     value = toRaw(value);
     const target = toRaw(this);
@@ -1921,6 +2063,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return this;
   }
+  __name(add, "add");
   function set$1(key, value) {
     value = toRaw(value);
     const target = toRaw(this);
@@ -1941,6 +2084,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return this;
   }
+  __name(set$1, "set$1");
   function deleteEntry(key) {
     const target = toRaw(this);
     const { has: has2, get: get3 } = getProto(target);
@@ -1958,6 +2102,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return result;
   }
+  __name(deleteEntry, "deleteEntry");
   function clear() {
     const target = toRaw(this);
     const hadItems = target.size !== 0;
@@ -1968,8 +2113,9 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return result;
   }
+  __name(clear, "clear");
   function createForEach(isReadonly, isShallow) {
-    return function forEach(callback, thisArg) {
+    return /* @__PURE__ */ __name(function forEach(callback, thisArg) {
       const observed = this;
       const target = observed["__v_raw"];
       const rawTarget = toRaw(target);
@@ -1978,8 +2124,9 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return target.forEach((value, key) => {
         return callback.call(thisArg, wrap(value), wrap(key), observed);
       });
-    };
+    }, "forEach");
   }
+  __name(createForEach, "createForEach");
   function createIterableMethod(method, isReadonly, isShallow) {
     return function(...args) {
       const target = this["__v_raw"];
@@ -2004,6 +2151,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       };
     };
   }
+  __name(createIterableMethod, "createIterableMethod");
   function createReadonlyMethod(type) {
     return function(...args) {
       if (true) {
@@ -2013,6 +2161,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return type === "delete" ? false : this;
     };
   }
+  __name(createReadonlyMethod, "createReadonlyMethod");
   var mutableInstrumentations = {
     get(key) {
       return get$1(this, key);
@@ -2093,6 +2242,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       return Reflect.get(hasOwn(instrumentations, key) && key in target ? instrumentations : target, key, receiver);
     };
   }
+  __name(createInstrumentationGetter, "createInstrumentationGetter");
   var mutableCollectionHandlers = {
     get: createInstrumentationGetter(false, false)
   };
@@ -2112,6 +2262,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       console.warn(`Reactive ${type} contains both the raw and reactive versions of the same object${type === `Map` ? ` as keys` : ``}, which can lead to inconsistencies. Avoid differentiating between the raw and reactive versions of an object and only use the reactive version if possible.`);
     }
   }
+  __name(checkIdentityKeys, "checkIdentityKeys");
   var reactiveMap = /* @__PURE__ */ new WeakMap();
   var shallowReactiveMap = /* @__PURE__ */ new WeakMap();
   var readonlyMap = /* @__PURE__ */ new WeakMap();
@@ -2130,18 +2281,22 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         return 0;
     }
   }
+  __name(targetTypeMap, "targetTypeMap");
   function getTargetType(value) {
     return value["__v_skip"] || !Object.isExtensible(value) ? 0 : targetTypeMap(toRawType(value));
   }
+  __name(getTargetType, "getTargetType");
   function reactive2(target) {
     if (target && target["__v_isReadonly"]) {
       return target;
     }
     return createReactiveObject(target, false, mutableHandlers, mutableCollectionHandlers, reactiveMap);
   }
+  __name(reactive2, "reactive2");
   function readonly(target) {
     return createReactiveObject(target, true, readonlyHandlers, readonlyCollectionHandlers, readonlyMap);
   }
+  __name(readonly, "readonly");
   function createReactiveObject(target, isReadonly, baseHandlers, collectionHandlers, proxyMap) {
     if (!isObject(target)) {
       if (true) {
@@ -2164,12 +2319,15 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     proxyMap.set(target, proxy);
     return proxy;
   }
+  __name(createReactiveObject, "createReactiveObject");
   function toRaw(observed) {
     return observed && toRaw(observed["__v_raw"]) || observed;
   }
+  __name(toRaw, "toRaw");
   function isRef(r) {
     return Boolean(r && r.__v_isRef === true);
   }
+  __name(isRef, "isRef");
   magic("nextTick", () => nextTick);
   magic("dispatch", (el) => dispatch.bind(dispatch, el));
   magic("watch", (el, { evaluateLater: evaluateLater2, effect: effect3 }) => (key, callback) => {
@@ -2209,24 +2367,28 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return refObjects;
   }
+  __name(getArrayOfRefObject, "getArrayOfRefObject");
   var globalIdMemo = {};
   function findAndIncrementId(name) {
     if (!globalIdMemo[name])
       globalIdMemo[name] = 0;
     return ++globalIdMemo[name];
   }
+  __name(findAndIncrementId, "findAndIncrementId");
   function closestIdRoot(el, name) {
     return findClosest(el, (element) => {
       if (element._x_ids && element._x_ids[name])
         return true;
     });
   }
+  __name(closestIdRoot, "closestIdRoot");
   function setIdRoot(el, name) {
     if (!el._x_ids)
       el._x_ids = {};
     if (!el._x_ids[name])
       el._x_ids[name] = findAndIncrementId(name);
   }
+  __name(setIdRoot, "setIdRoot");
   magic("id", (el) => (name, key = null) => {
     let root = closestIdRoot(el, name);
     let id = root ? root._x_ids[name] : findAndIncrementId(name);
@@ -2238,6 +2400,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   function warnMissingPluginMagic(name, magicName, slug) {
     magic(magicName, (el) => warn(`You can't use [$${directiveName}] without first installing the "${name}" plugin here: https://alpinejs.dev/plugins/${slug}`, el));
   }
+  __name(warnMissingPluginMagic, "warnMissingPluginMagic");
   function entangle({ get: outerGet, set: outerSet }, { get: innerGet, set: innerSet }) {
     let firstRun = true;
     let outerHash, innerHash, outerHashLatest, innerHashLatest;
@@ -2269,16 +2432,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       release(reference);
     };
   }
+  __name(entangle, "entangle");
   directive("modelable", (el, { expression }, { effect: effect3, evaluateLater: evaluateLater2, cleanup: cleanup2 }) => {
     let func = evaluateLater2(expression);
-    let innerGet = () => {
+    let innerGet = /* @__PURE__ */ __name(() => {
       let result;
       func((i) => result = i);
       return result;
-    };
+    }, "innerGet");
     let evaluateInnerSet = evaluateLater2(`${expression} = __placeholder`);
-    let innerSet = (val) => evaluateInnerSet(() => {
-    }, { scope: { __placeholder: val } });
+    let innerSet = /* @__PURE__ */ __name((val) => evaluateInnerSet(() => {
+    }, { scope: { __placeholder: val } }), "innerSet");
     let initialValue = innerGet();
     innerSet(initialValue);
     queueMicrotask(() => {
@@ -2341,8 +2505,8 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
     cleanup2(() => clone2.remove());
   });
-  var handler = () => {
-  };
+  var handler = /* @__PURE__ */ __name(() => {
+  }, "handler");
   handler.inline = (el, { modifiers }, { cleanup: cleanup2 }) => {
     modifiers.includes("self") ? el._x_ignoreSelf = true : el._x_ignore = true;
     cleanup2(() => {
@@ -2353,9 +2517,9 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   directive("effect", (el, { expression }, { effect: effect3 }) => effect3(evaluateLater(el, expression)));
   function on(el, event, modifiers, callback) {
     let listenerTarget = el;
-    let handler4 = (e) => callback(e);
+    let handler4 = /* @__PURE__ */ __name((e) => callback(e), "handler4");
     let options = {};
-    let wrapHandler = (callback2, wrapper) => (e) => wrapper(callback2, e);
+    let wrapHandler = /* @__PURE__ */ __name((callback2, wrapper) => (e) => wrapper(callback2, e), "wrapHandler");
     if (modifiers.includes("dot"))
       event = dotSyntax(event);
     if (modifiers.includes("camel"))
@@ -2425,23 +2589,29 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       listenerTarget.removeEventListener(event, handler4, options);
     };
   }
+  __name(on, "on");
   function dotSyntax(subject) {
     return subject.replace(/-/g, ".");
   }
+  __name(dotSyntax, "dotSyntax");
   function camelCase2(subject) {
     return subject.toLowerCase().replace(/-(\w)/g, (match, char) => char.toUpperCase());
   }
+  __name(camelCase2, "camelCase2");
   function isNumeric(subject) {
     return !Array.isArray(subject) && !isNaN(subject);
   }
+  __name(isNumeric, "isNumeric");
   function kebabCase2(subject) {
     if ([" ", "_"].includes(subject))
       return subject;
     return subject.replace(/([a-z])([A-Z])/g, "$1-$2").replace(/[_\s]/, "-").toLowerCase();
   }
+  __name(kebabCase2, "kebabCase2");
   function isKeyEvent(event) {
     return ["keydown", "keyup"].includes(event);
   }
+  __name(isKeyEvent, "isKeyEvent");
   function isListeningForASpecificKeyThatHasntBeenPressed(e, modifiers) {
     let keyModifiers = modifiers.filter((i) => {
       return !["window", "document", "prevent", "stop", "once", "capture"].includes(i);
@@ -2474,6 +2644,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return true;
   }
+  __name(isListeningForASpecificKeyThatHasntBeenPressed, "isListeningForASpecificKeyThatHasntBeenPressed");
   function keyToModifiers(key) {
     if (!key)
       return [];
@@ -2500,6 +2671,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         return modifier;
     }).filter((modifier) => modifier);
   }
+  __name(keyToModifiers, "keyToModifiers");
   directive("model", (el, { modifiers, expression }, { effect: effect3, cleanup: cleanup2 }) => {
     let scopeTarget = el;
     if (modifiers.includes("parent")) {
@@ -2512,15 +2684,15 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     } else if (typeof expression === "function" && typeof expression() === "string") {
       evaluateSet = evaluateLater(scopeTarget, `${expression()} = __placeholder`);
     } else {
-      evaluateSet = () => {
-      };
+      evaluateSet = /* @__PURE__ */ __name(() => {
+      }, "evaluateSet");
     }
-    let getValue = () => {
+    let getValue = /* @__PURE__ */ __name(() => {
       let result;
       evaluateGet((value) => result = value);
       return isGetterSetter(result) ? result.get() : result;
-    };
-    let setValue = (value) => {
+    }, "getValue");
+    let setValue = /* @__PURE__ */ __name((value) => {
       let result;
       evaluateGet((value2) => result = value2);
       if (isGetterSetter(result)) {
@@ -2531,7 +2703,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           scope: { __placeholder: value }
         });
       }
-    };
+    }, "setValue");
     if (typeof expression === "string" && el.type === "radio") {
       mutateDom(() => {
         if (!el.hasAttribute("name"))
@@ -2603,19 +2775,24 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
     });
   }
+  __name(getInputValue, "getInputValue");
   function safeParseNumber(rawValue) {
     let number = rawValue ? parseFloat(rawValue) : null;
     return isNumeric2(number) ? number : rawValue;
   }
+  __name(safeParseNumber, "safeParseNumber");
   function checkedAttrLooseCompare2(valueA, valueB) {
     return valueA == valueB;
   }
+  __name(checkedAttrLooseCompare2, "checkedAttrLooseCompare2");
   function isNumeric2(subject) {
     return !Array.isArray(subject) && !isNaN(subject);
   }
+  __name(isNumeric2, "isNumeric2");
   function isGetterSetter(value) {
     return value !== null && typeof value === "object" && typeof value.get === "function" && typeof value.set === "function";
   }
+  __name(isGetterSetter, "isGetterSetter");
   directive("cloak", (el) => queueMicrotask(() => mutateDom(() => el.removeAttribute(prefix("cloak")))));
   addInitSelector(() => `[${prefix("init")}]`);
   directive("init", skipDuringClone((el, { expression }, { evaluate: evaluate2 }) => {
@@ -2648,7 +2825,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
   });
   mapAttributes(startingWith(":", into(prefix("bind:"))));
-  var handler2 = (el, { value, modifiers, expression, original }, { effect: effect3 }) => {
+  var handler2 = /* @__PURE__ */ __name((el, { value, modifiers, expression, original }, { effect: effect3 }) => {
     if (!value) {
       let bindingProviders = {};
       injectBindingProviders(bindingProviders);
@@ -2670,7 +2847,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       }
       mutateDom(() => bind(el, value, result, modifiers));
     }));
-  };
+  }, "handler2");
   handler2.inline = (el, { value, modifiers, expression }) => {
     if (!value)
       return;
@@ -2682,6 +2859,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   function storeKeyForXFor(el, expression) {
     el._x_keyExpression = expression;
   }
+  __name(storeKeyForXFor, "storeKeyForXFor");
   addRootSelector(() => `[${prefix("data")}]`);
   directive("data", skipDuringClone((el, { expression }, { cleanup: cleanup2 }) => {
     expression = expression === "" ? "{}" : expression;
@@ -2720,15 +2898,15 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           }
         });
       };
-    let hide = () => {
+    let hide = /* @__PURE__ */ __name(() => {
       el._x_doHide();
       el._x_isShown = false;
-    };
-    let show = () => {
+    }, "hide");
+    let show = /* @__PURE__ */ __name(() => {
       el._x_doShow();
       el._x_isShown = true;
-    };
-    let clickAwayCompatibleShow = () => setTimeout(show);
+    }, "show");
+    let clickAwayCompatibleShow = /* @__PURE__ */ __name(() => setTimeout(show), "clickAwayCompatibleShow");
     let toggle = once((value) => value ? show() : hide(), (value) => {
       if (typeof el._x_toggleAndCascadeWithTransitions === "function") {
         el._x_toggleAndCascadeWithTransitions(el, value, show, hide);
@@ -2762,7 +2940,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     });
   });
   function loop(el, iteratorNames, evaluateItems, evaluateKey) {
-    let isObject2 = (i) => typeof i === "object" && !Array.isArray(i);
+    let isObject2 = /* @__PURE__ */ __name((i) => typeof i === "object" && !Array.isArray(i), "isObject2");
     let templateEl = el;
     evaluateItems((items) => {
       if (isNumeric3(items) && items >= 0) {
@@ -2871,6 +3049,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       templateEl._x_prevKeys = keys;
     });
   }
+  __name(loop, "loop");
   function parseForExpression(expression) {
     let forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/;
     let stripParensRE = /^\s*\(|\)\s*$/g;
@@ -2893,6 +3072,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     }
     return res;
   }
+  __name(parseForExpression, "parseForExpression");
   function getIterationScopeVariables(iteratorNames, item, index, items) {
     let scopeVariables = {};
     if (/^\[.*\]$/.test(iteratorNames.item) && Array.isArray(item)) {
@@ -2914,11 +3094,14 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       scopeVariables[iteratorNames.collection] = items;
     return scopeVariables;
   }
+  __name(getIterationScopeVariables, "getIterationScopeVariables");
   function isNumeric3(subject) {
     return !Array.isArray(subject) && !isNaN(subject);
   }
+  __name(isNumeric3, "isNumeric3");
   function handler3() {
   }
+  __name(handler3, "handler3");
   handler3.inline = (el, { expression }, { cleanup: cleanup2 }) => {
     let root = closestRoot(el);
     if (!root._x_refs)
@@ -2929,7 +3112,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   directive("ref", handler3);
   directive("if", (el, { expression }, { effect: effect3, cleanup: cleanup2 }) => {
     let evaluate2 = evaluateLater(el, expression);
-    let show = () => {
+    let show = /* @__PURE__ */ __name(() => {
       if (el._x_currentIfEl)
         return el._x_currentIfEl;
       let clone2 = el.content.cloneNode(true).firstElementChild;
@@ -2949,13 +3132,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         delete el._x_currentIfEl;
       };
       return clone2;
-    };
-    let hide = () => {
+    }, "show");
+    let hide = /* @__PURE__ */ __name(() => {
       if (!el._x_undoIf)
         return;
       el._x_undoIf();
       delete el._x_undoIf;
-    };
+    }, "hide");
     effect3(() => evaluate2((value) => {
       value ? show() : hide();
     }));
@@ -2988,16 +3171,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   function warnMissingPluginDirective(name, directiveName2, slug) {
     directive(directiveName2, (el) => warn(`You can't use [x-${directiveName2}] without first installing the "${name}" plugin here: https://alpinejs.dev/plugins/${slug}`, el));
   }
+  __name(warnMissingPluginDirective, "warnMissingPluginDirective");
   alpine_default.setEvaluator(normalEvaluator);
   alpine_default.setReactivityEngine({ reactive: reactive2, effect: effect2, release: stop, raw: toRaw });
   var src_default = alpine_default;
   var module_default = src_default;
 
   // src/app.js
-  var documentHeight = () => {
+  var documentHeight = /* @__PURE__ */ __name(() => {
     const doc = document.documentElement;
     doc.style.setProperty("--height", `${window.innerHeight}px`);
-  };
+  }, "documentHeight");
   window.addEventListener("resize", documentHeight);
   documentHeight();
   window.Alpine = module_default;
