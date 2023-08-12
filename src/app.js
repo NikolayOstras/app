@@ -13,5 +13,10 @@ const headerHeight = () => {
 	const doc = document.documentElement
 	doc.style.setProperty('--header-height', `${header.offsetHeight}px`)
 }
+Alpine.store('state', {
+	lock: false
+})
+
+
 window.Alpine = Alpine
 Alpine.start()

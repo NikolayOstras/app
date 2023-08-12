@@ -1,10 +1,8 @@
 import gulpEsbuild from 'gulp-esbuild';
-import cached from 'gulp-cached';
 
 export const build = () => {
 	return app.gulp
 		.src(app.path.src.js)
-		.pipe(cached('scripts')) 
 		.pipe(
 			gulpEsbuild({
 				outfile: 'app.js',

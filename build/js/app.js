@@ -3184,6 +3184,9 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   }, "documentHeight");
   window.addEventListener("resize", documentHeight);
   documentHeight();
+  module_default.store("state", {
+    lock: false
+  });
   window.Alpine = module_default;
   module_default.start();
 })();

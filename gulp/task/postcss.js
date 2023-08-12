@@ -1,9 +1,7 @@
 import postcss from 'gulp-postcss';
-import cached from 'gulp-cached';
 import postcssCenter from 'postcss-center';
 import postcssCustomMedia from 'postcss-custom-media';
 import postcssShort from 'postcss-short';
-
 const plugins = [
 	postcssCustomMedia(),
 	postcssShort(),
@@ -13,7 +11,6 @@ const plugins = [
 export const post = () => {
 	return app.gulp
 		.src(`${app.path.build.css}/style.css`)
-		.pipe(cached('postcss')) // Добавляем gulp-cached для кэширования файлов
 		.pipe(
 			app.plugins.plumber(
 				app.plugins.notify.onError({
