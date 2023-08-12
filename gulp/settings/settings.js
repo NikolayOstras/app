@@ -7,13 +7,10 @@ export const path = {
 		js: './build/js/',
 	},
 	src: {
-		html: './src/*.pug',
-		img: './src/img/**/*.{jpg,jpeg,png,gif}',
-		scss: './src/scss/style.scss',
-		components: './src/components/**/*.js',
-		js: './src/js/app.js',
-		jsFolder: './src/js/',
-		svgicons: './src/img/icons/*.svg',
+		html: './src/*.html',
+		img: './src/assets/img/**/*.{jpg,jpeg,png,gif}',
+		scss: './src/style.scss',
+		js: './src/app.js',
 	},
 	clean: './build',
 }

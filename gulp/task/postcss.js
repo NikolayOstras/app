@@ -2,13 +2,10 @@ import postcss from 'gulp-postcss'
 import postcssCenter from 'postcss-center'
 import postcssCustomMedia from 'postcss-custom-media'
 import postcssShort from 'postcss-short'
-import tailwindcss from 'tailwindcss'
-import tailwindConfig from '../../tailwind.config.cjs'
 const plugins = [
 	postcssCustomMedia(),
 	postcssShort(),
 	postcssCenter(),
-	tailwindcss(tailwindConfig),
 ]
 export const post = () => {
 	return app.gulp

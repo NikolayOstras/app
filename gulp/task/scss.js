@@ -1,7 +1,4 @@
-import gulpSass from 'gulp-sass'
-import sassGlob from 'gulp-sass-glob'
-import dartSass from 'sass'
-const sass = gulpSass(dartSass)
+import sass from 'gulp-dart-sass'
 
 export const scss = () => {
 	return app.gulp
@@ -14,7 +11,6 @@ export const scss = () => {
 				})
 			)
 		)
-		.pipe(sassGlob())
 		.pipe(sass())
 		.pipe(app.gulp.dest(app.path.build.css))
 }

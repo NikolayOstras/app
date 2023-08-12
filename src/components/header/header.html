@@ -1,0 +1,11 @@
+<header class="header" x-data="{open:false}">
+	<a class="logo" href="/">Logo</a>
+	<nav class="nav" role="navigation">
+		<ul class="menu" role="menu" :class="open && 'is-active'">
+			<li role="menuitem"><a href="/">Product</a></li>
+			<li role="menuitem"><a href="/">Commitments</a></li>
+			<li role="menuitem"><a href="/">Help</a></li>
+		</ul>
+	</nav>
+	<button class="menu-btn" aria-label="open menu" @click="open=!open" :class="open && 'is-active'"><span></span><span></span><span></span></button>
+</header>
