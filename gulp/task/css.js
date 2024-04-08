@@ -21,8 +21,6 @@ export const css = () => {
 				cascade: true,
 			})
 		)
-		.pipe(app.gulp.dest(app.path.build.css))
 		.pipe(cleanCss())
-		.pipe(app.plugins.rename({ suffix: '.min' }))
 		.pipe(app.gulp.dest(app.path.build.css))
 }

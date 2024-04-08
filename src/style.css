@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	body {
+		@apply text-white bg-black;
+	}
+	.container {
+		@apply px-4 mx-auto max-w-7xl;
+	}
+}
+@layer components {
+	.categories {
+		@apply flex;
+	}
+	.categories > li {
+		@apply transition-colors border rounded-xl hover:bg-accent-hover;
+	}
+	.categories > li > a {
+		@apply block px-6 py-2;
+	}
+}
